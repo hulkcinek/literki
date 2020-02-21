@@ -37,21 +37,30 @@ public class Main {
 
      */
     public static boolean szukanie(char[][] plansza, String s, int n, int m, int ktore, int x, int y) {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { // czy te petle (obie) sa potrzebne? jak je zmienic? czy trzeba?
             for (int j = 0; j < m; j++) {
                 if (ktore == 0) {
                     if (s.charAt(0) == plansza[i][j]) {
-                            x = j;
-                            y = i;
-                            ktore++;
-                            szukanie(plansza, s, n, m, ktore, x, y);
+                        x = j;
+                        y = i;
+                        ktore++;
+                        szukanie(plansza, s, n, m, ktore, x, y);
                     } else if (i == n - 1 && j == m - 1) {
-                            return false;
+                        return false;
                     }
                 } else {
-                        if (plansza[y-1][x] == ' ' ){//zamiast tej spacji powinien byc null??
-
-                        }
+                    if (y-1 >= 0 && s.charAt(ktore) == plansza[y-1][x]){
+                        szukanie(plansza, s, n, m, ktore+1, x, y-1);
+                    }
+                    if (y+1 <= n-1 && s.charAt(ktore) == plansza[y+1][x]){
+                        szukanie(plansza, s, n, m, ktore+1, x, y+1);
+                    }
+                    if (x-1 >= 0 && s.charAt(ktore) == plansza[y][x-1]){
+                        szukanie(plansza, s, n, m, ktore+1, x-1, y);
+                    }
+                    if (x+1 <= m-1 && s.charAt(ktore) == plansza[y][x+1]){
+                        szukanie(plansza, s, n, m, ktore+1, x+1, y);
+                    }
 
 
 
