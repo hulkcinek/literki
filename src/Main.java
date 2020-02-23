@@ -12,9 +12,9 @@ public class Main {
         for (int i = 0; i <= n; i++) {
             ciag += s.nextLine();
         }
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                plansza[j][i] = ciag.charAt(licznik);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                plansza[i][j] = ciag.charAt(licznik);
                 licznik++;
             }
         }
