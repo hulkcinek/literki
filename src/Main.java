@@ -23,14 +23,48 @@ public class Main {
         for (int i = 0; i < liczba; i++) {
             szukaneSlowa[i] = s.next();
         }
+
         for (int i = 0; i < szukaneSlowa.length; i++) {
-            if (szukanie(plansza, szukaneSlowa[i], n, m, ktoraLitera, 0, 0)){
-                System.out.println(szukaneSlowa[i] + " TAK");
-            }else {
-                System.out.println(szukaneSlowa[i] + "NIE");
+            boolean znaleziono = false;
+            for(int j = 0; j < n; j++) {
+                for(int k = 0; k < m; k++) {
+                    if (!znaleziono && szukaneSlowa[i].charAt(0)==plansza[j][k]){ // jesli nie znaleziono sprawdza literke
+                        if (szukanieBezForow(plansza, szukaneSlowa[i], n, m, ktoraLitera+1, k, j)){
+                            System.out.println(szukaneSlowa[i] + " TAK");
+                            znaleziono = true;
+                        }
+                    }
+                }
+            }
+            if (!znaleziono) {
+                System.out.println(szukaneSlowa[i] + " NIE");
             }
         }
     }
+
+    // poprawic sobie aby tablica byla prawidlowo zapisana (zgodnie z wejsciem) tj. zamienic kolumny z wierszami
+    public static boolean szukanieBezForow(char[][] plansza, String s, int wysokosc, int szerokosc, int ktoraLitera, int x, int y) { // x,y - aktualna pozycja "kursor"
+        if (ktoraLitera==s.length()){ // jesli znalezlismy wszystkie litery to znaczy ze da sie ulozyc takie slowo
+            return true;
+        }
+
+        boolean wynik = false;
+        if (y-1 >= 0 && s.charAt(ktoraLitera) == plansza[y-1][x]){
+            wynik = szukanieBezForow(plansza, s, wysokosc, szerokosc, ktoraLitera+1, x, y-1) || wynik; // przepisujemy true jesli ktorykolwiek z nich byl true
+        }
+        if (y+1 <= wysokosc-1 && s.charAt(ktoraLitera) == plansza[y+1][x]){
+            wynik = szukanieBezForow(plansza, s, wysokosc, szerokosc, ktoraLitera+1, x, y+1) || wynik;
+        }
+        if (x-1 >= 0 && s.charAt(ktoraLitera) == plansza[y][x-1]){
+            wynik = szukanieBezForow(plansza, s, wysokosc, szerokosc, ktoraLitera+1, x-1, y) || wynik;
+        }
+        if (x+1 <= szerokosc-1 && s.charAt(ktoraLitera) == plansza[y][x+1]){
+            wynik = szukanieBezForow(plansza, s, wysokosc, szerokosc, ktoraLitera+1, x+1, y) || wynik;
+        }
+
+        return wynik;
+    }
+
 
     /*
     Do zastosowania rekurencja (aby obsluzyc np. wystepowanie tej samej literki u gory i na prawo
@@ -48,7 +82,7 @@ public class Main {
                     } else if (i == n - 1 && j == m - 1) {
                         return false;
                     }
-                } else {
+                } else if (ktore < s.length()-1) {
                     if (y-1 >= 0 && s.charAt(ktore) == plansza[y-1][x]){
                         szukanie(plansza, s, n, m, ktore+1, x, y-1);
                     }
@@ -61,70 +95,24 @@ public class Main {
                     if (x+1 <= m-1 && s.charAt(ktore) == plansza[y][x+1]){
                         szukanie(plansza, s, n, m, ktore+1, x+1, y);
                     }
-
-
-
-
-
-//                        if (ktore == s.length() - 1 && plansza[y - 1][x] == s.charAt(a)) {
-//                            return true;
-//                        } else if (ktore == s.length() - 1 && plansza[y + 1][x] == s.charAt(a)) {
-//                            return true;
-//                        } else if (ktore == s.length() - 1 && plansza[y][x - 1] == s.charAt(a)) {
-//                            return true;
-//                        } else if (ktore == s.length() - 1 && plansza[y][x + 1] == s.charAt(a)) {
-//                            return true;//
-//                        } else if (plansza[y - 1][x] == s.charAt(a)) {
-//                            y -= 1;
-//                        } else if (plansza[y + 1][x] == s.charAt(a)) {
-//                            y += 1;
-//                        } else if (plansza[y][x - 1] == s.charAt(a)) {
-//                            x -= 1;
-//                        } else if (plansza[y][x + 1] == s.charAt(a)) {
-//                            x += 1;
+                }else {
+                    if (y-1 >= 0 && s.charAt(ktore) == plansza[y-1][x]){
+                        return true;
+                    }
+                    if (y+1 <= n-1 && s.charAt(ktore) == plansza[y+1][x]){
+                        return true;
+                    }
+                    if (x-1 >= 0 && s.charAt(ktore) == plansza[y][x-1]){
+                        return true;
+                    }
+                    if (x+1 <= m-1 && s.charAt(ktore) == plansza[y][x+1]) {
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
-//    public static boolean szukanie(char[][] plansza, String s, int n, int m) {
-//        int x = 0;
-//        int y = 0;
-//        for (int a = 0; a < s.length(); a++) {
-//            for (int i = 0; i < n; i++) {
-//                for (int j = 0; j < m; j++) {
-//                    if (a == 0){
-//                        if (s.charAt(a)==plansza[i][j]){
-//                            x = j;
-//                            y = i;
-//                        }else if (i == n-1 && j == m-1){
-//                            return false;
-//                        }
-//                    }else {
-//
-//                        if(a == s.length()-1 && plansza[y-1][x] == s.charAt(a)){
-//                            return true;
-//                        }else if(a == s.length()-1 && plansza[y+1][x]==s.charAt(a)){
-//                            return true;
-//                        }else if(a == s.length()-1 && plansza[y][x-1]==s.charAt(a)){
-//                            return true;
-//                        }else if(a == s.length()-1 && plansza[y][x+1]==s.charAt(a)){
-//                            return true;//
-//                        }else if(plansza[y-1][x]==s.charAt(a)){
-//                            y -= 1;
-//                        }else if(plansza[y+1][x]==s.charAt(a)){
-//                            y += 1;
-//                        }else if(plansza[y][x-1]==s.charAt(a)){
-//                            x -= 1;
-//                        }else if(plansza[y][x+1]==s.charAt(a)){
-//                            x += 1;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return false;
-//    }
 
     public static void wypisz(char[][] plansza, int m, int n) {
         for (int i = 0; i < n; i++) {
